@@ -2,38 +2,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Partida {
-    private static int nroPartidaGlobal=1;
-    private int nroPartidaActual;
     private LocalDate fecha;
     private Integer ptosAConseguir;
     private Mesa mesa;
     private EstadoPartida estadoPartida;
     private ArrayList<Ronda> rondas=new ArrayList<>();
+    private Usuario usuarioGanadorDePartida;
 
     public Partida(Integer ptosAConseguir, Mesa mesa) {
-
-        this.nroPartidaActual = nroPartidaGlobal;
-        nroPartidaGlobal++;
         this.fecha = LocalDate.now();
         this.ptosAConseguir = ptosAConseguir;
         this.mesa = mesa;
         this.estadoPartida=EstadoPartida.EN_CURSO;
-    }
-
-    public static int getNroPartidaGlobal() {
-        return nroPartidaGlobal;
-    }
-
-    public static void setNroPartidaGlobal(int nroPartidaGlobal) {
-        Partida.nroPartidaGlobal = nroPartidaGlobal;
-    }
-
-    public int getNroPartidaActual() {
-        return nroPartidaActual;
-    }
-
-    public void setNroPartidaActual(int nroPartidaActual) {
-        this.nroPartidaActual = nroPartidaActual;
     }
 
     public LocalDate getFecha() {
@@ -59,5 +39,39 @@ public class Partida {
     public void setMesa(Mesa mesa) {
         this.mesa = mesa;
     }
+
+    public Usuario getUsuarioGanadorDePartida() {
+        return usuarioGanadorDePartida;
+    }
+
+    public void setUsuarioGanadorDePartida(Usuario usuarioGanadorDePartida) {
+        this.usuarioGanadorDePartida = usuarioGanadorDePartida;
+    }
+
+    public EstadoPartida getEstadoPartida() {
+        return estadoPartida;
+    }
+
+    public void setEstadoPartida(EstadoPartida estadoPartida) {
+        this.estadoPartida = estadoPartida;
+    }
+
+    public ArrayList<Ronda> getRondas() {
+        return rondas;
+    }
+
+    public void setRondas(ArrayList<Ronda> rondas) {
+        this.rondas = rondas;
+    }
+
+    public void verificarGanadorPartida(){
+        for (Usuario x:this.getMesa().getJugadores()){
+            if(x.getPuntajeTotal().equals(this.ptosAConseguir)){
+                this.setUsuarioGanadorDePartida(x);
+                break;
+            }
+        }
+    }
+
 
 }

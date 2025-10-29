@@ -44,37 +44,41 @@ public class Usuario {
         this.getManoActual().getFichasEnMano().add(fichaSacada);
     }
 
-    public void ponerFichaEnMesa(Mesa mesa, Ficha ficha) {
+    public void ponerFichaEnMesa(Mesa mesa, Ficha ficha,Partida partida) {
         ArrayList<Ficha> jugadas = mesa.getFichasJugadas();
         Ficha primera = jugadas.getFirst();
         Ficha ultima = jugadas.getLast();
 
         boolean agregada = false;
-
-        // Agregar al inicio
-        if (ficha.getLado2().equals(primera.getLado1())) {
-            jugadas.addFirst(ficha);
-            agregada = true;
-        } else if (ficha.getLado1().equals(primera.getLado1())) {
-            ficha.rotar();
-            jugadas.addFirst(ficha);
-            agregada = true;
-        }
-
-        // Agregar al final (si aún no se agregó)
-        if (!agregada) {
-            if (ficha.getLado1().equals(ultima.getLado2())) {
-                jugadas.addLast(ficha);
+        while(!agregada){
+            // Agregar al inicio
+            if (ficha.getLado2().equals(primera.getLado1())) {
+                jugadas.addFirst(ficha);
                 agregada = true;
-            } else if (ficha.getLado2().equals(ultima.getLado2())) {
+            } else if (ficha.getLado1().equals(primera.getLado1())) {
                 ficha.rotar();
-                jugadas.addLast(ficha);
+                jugadas.addFirst(ficha);
                 agregada = true;
             }
-        }
 
-        if (!agregada) {
-            System.out.println("No se puede agregar, valores incompatibles");
+            // Agregar al final (si aún no se agregó)
+            if (!agregada) {
+                if (ficha.getLado1().equals(ultima.getLado2())) {
+                    jugadas.addLast(ficha);
+                    agregada = true;
+                } else if (ficha.getLado2().equals(ultima.getLado2())) {
+                    ficha.rotar();
+                    jugadas.addLast(ficha);
+                    agregada = true;
+                }
+            }
+
+            if (!agregada) {
+                System.out.println("No se puede agregar, valores incompatibles, debes tomar ficha del pozo");
+                this.sacarFichaDelPozo(mesa.getPozo());
+            }
         }
+        partida.getRondas().getLast().siguienteTurno(partida);
+
     }
 }
