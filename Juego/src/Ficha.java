@@ -47,7 +47,7 @@ public class Ficha {
     @Override
     public String toString() {
         if(this.isDoble()){
-            return this.lado1+"\n_"+this.lado2;
+            return this.lado1+"\n_\n"+this.lado2;
         }else{
             return this.lado1 + "|" + this.lado2;
         }

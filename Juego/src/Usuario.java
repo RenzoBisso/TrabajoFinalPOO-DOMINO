@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Usuario {
 
@@ -45,11 +46,16 @@ public class Usuario {
     }
 
     public void ponerFichaEnMesa(Mesa mesa, Ficha ficha,Partida partida) {
-        ArrayList<Ficha> jugadas = mesa.getFichasJugadas();
-        Ficha primera = jugadas.getFirst();
-        Ficha ultima = jugadas.getLast();
+        LinkedList<Ficha> jugadas = mesa.getFichasJugadas();
 
-        boolean agregada = false;
+        if (jugadas.isEmpty()) {
+            jugadas.add(ficha);
+            System.out.println(this.getNombreUsuario() + " coloca la primera ficha: " + ficha);
+        }
+        else {
+            Ficha primera = jugadas.getFirst();
+            Ficha ultima = jugadas.getLast();
+            boolean agregada = false;
         while(!agregada){
             // Agregar al inicio
             if (ficha.getLado2().equals(primera.getLado1())) {
@@ -76,9 +82,11 @@ public class Usuario {
             if (!agregada) {
                 System.out.println("No se puede agregar, valores incompatibles, debes tomar ficha del pozo");
                 this.sacarFichaDelPozo(mesa.getPozo());
+                break;
             }
         }
         partida.getRondas().getLast().siguienteTurno(partida);
 
+        }
     }
 }

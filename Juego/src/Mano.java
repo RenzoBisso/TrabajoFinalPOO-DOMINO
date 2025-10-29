@@ -3,6 +3,10 @@ import java.util.ArrayList;
 public class Mano {
     private ArrayList<Ficha> fichasEnMano;
 
+    public Mano(){
+        this.fichasEnMano=new ArrayList<>();
+    }
+
     public ArrayList<Ficha> getFichasEnMano() {
         return fichasEnMano;
     }
@@ -17,4 +21,9 @@ public class Mano {
         return count;
     }
 
+    public void mostrarFichas(){
+        for (Ficha f:this.getFichasEnMano()){
+            System.out.println(f.toString());
+        }
+    }
 }

@@ -10,7 +10,7 @@ public class Ronda {
     private Integer turnoActual=0;
 
 
-    public Ronda(Usuario jugadorMano) {
+    public Ronda(Usuario jugadorMano, Partida partida) {
         this.nroRonda = nroRondaGlobal;
         nroRondaGlobal++;
         this.jugadorMano = jugadorMano;
@@ -97,7 +97,7 @@ public class Ronda {
 
     public Ronda nuevaRonda(Partida partida) {
         Usuario nuevoMano = this.nuevaMano(partida);
-        Ronda ronda = new Ronda(nuevoMano);
+        Ronda ronda = new Ronda(nuevoMano, partida);
         partida.getRondas().add(ronda);
         return ronda;
     }

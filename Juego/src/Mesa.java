@@ -1,13 +1,15 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 
 public class Mesa {
     private Pozo pozo;
-    private ArrayList<Ficha> fichasJugadas=new ArrayList<>();
+    private LinkedList<Ficha> fichasJugadas=new LinkedList<>();
     private ArrayList<Usuario>jugadores;
 
     public Mesa(ArrayList<Usuario> jugadores) {
         this.jugadores=jugadores;
+        this.pozo = new Pozo();
         this.cargarFichas();
         this.repartirFichas();
     }
@@ -20,11 +22,11 @@ public class Mesa {
         this.pozo = pozo;
     }
 
-    public ArrayList<Ficha> getFichasJugadas() {
+    public LinkedList<Ficha> getFichasJugadas() {
         return fichasJugadas;
     }
 
-    public void setFichasJugadas(ArrayList<Ficha> fichasJugadas) {
+    public void setFichasJugadas(LinkedList<Ficha> fichasJugadas) {
         this.fichasJugadas = fichasJugadas;
     }
 
@@ -54,12 +56,16 @@ public class Mesa {
         for(Usuario x:this.getJugadores()){
             Mano mano=new Mano();
             for(int k=0;k<7;k++){
-                Ficha ficha=this.getPozo().getFichasEnPozo().getFirst();
+                Ficha ficha = this.getPozo().getFichasEnPozo().removeFirst();
                 mano.getFichasEnMano().add(ficha);
             }
             x.setManoActual(mano);
         }
     }
-
+    public void mostrarFichasJugadas(){
+        for (Ficha f:this.getFichasJugadas()){
+            System.out.println(f.toString());
+        }
+    }
 
 }
