@@ -42,4 +42,23 @@ public class Ficha {
         this.lado1=this.lado2;
         this.lado2=aux;
     }
+
+    @Override
+    public String toString() {
+        int count=0;
+        if (this.isDoble()) {
+            return String.format("""
+╔═══╗
+║ %d ║
+╠═══╣
+║ %d ║
+╚═══╝""",this.lado1, this.lado2);
+        } else {
+            return String.format("""
+╔═══╦═══╗
+║ %d ║ %d ║
+╚═══╩═══╝""",this.lado1, this.lado2);
+        }
+    }
+
 }
