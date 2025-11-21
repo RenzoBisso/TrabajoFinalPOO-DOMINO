@@ -114,7 +114,7 @@ public class Ronda {
         return false;
     }
 
-    public boolean jugarTurno(int indiceFichaElegida) {
+    public boolean jugarTurno(int indiceFichaElegida,App app) {
         Jugador actual = getJugadorActual();
 
         if (fichasJugadas.isEmpty()) {
@@ -123,6 +123,7 @@ public class Ronda {
                 fichasJugadas.add(f);
                 actual.getMano().remove(indiceFichaElegida);
                 jugadoresQuePasaron = 0;
+                app.notificar();
                 pasarAlSiguienteJugador();
                 return true;
             }
@@ -142,7 +143,6 @@ public class Ronda {
                 verificarFinRonda();
                 return true;
             }
-
             pasarAlSiguienteJugador();
             return true;
         }
@@ -161,7 +161,6 @@ public class Ronda {
             verificarFinRonda();
             return true;
         }
-
         pasarAlSiguienteJugador();
         return true;
     }

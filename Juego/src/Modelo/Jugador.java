@@ -96,4 +96,10 @@ public class Jugador {
         this.getMano().add(f);
     }
 
+    @Override
+    public String toString() {
+        return "Jugador{" +
+                "puntosPartida=" + puntosPartida +
+                '}';
+    }
 }

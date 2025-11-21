@@ -25,7 +25,7 @@ public class ControladorConsola implements Observador {
 
             while (!colocada) {
                 int indice = vista.pedirIndiceFicha();
-                boolean resultado = modelo.getRonda().jugarTurno(indice);
+                boolean resultado = modelo.getRonda().jugarTurno(indice, modelo);
 
                 if (!resultado) {
                     vista.mostrarMensaje("Ficha incompatible. Elegí otra.");
@@ -58,6 +58,7 @@ public class ControladorConsola implements Observador {
 
     @Override
     public void actualizar() {
-
+        vista.mostrarMesa(modelo.getRonda());
+        vista.mostrarMano(modelo.getRonda().getJugadorActual());
     }
 }
