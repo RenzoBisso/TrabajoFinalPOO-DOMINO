@@ -15,4 +15,11 @@ public class Pozo {
     public void setPozo(LinkedList<Ficha> pozo) {
         this.pozo = pozo;
     }
+
+
+    public Ficha devolverPrimera(){
+        Ficha f=this.getPozo().getFirst();
+        this.getPozo().removeFirst();
+        return f;
+    }
 }

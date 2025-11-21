@@ -1,14 +1,13 @@
 package Modelo;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 
 public class Ronda {
-    private Pozo pozo=new Pozo();
+    private Pozo pozo = new Pozo();
     private LinkedList<Jugador> jugadores;
-    private LinkedList<Ficha> fichasJugadas=new LinkedList<>();
+    private LinkedList<Ficha> fichasJugadas = new LinkedList<>();
     private int indiceJugadorActual = 0;
     private int jugadoresQuePasaron = 0;
 
@@ -44,17 +43,14 @@ public class Ronda {
 
     public void verificarFinRonda() {
         Jugador ganadorRonda = null;
-
         for (Jugador j : this.jugadores) {
             if (j.getMano().isEmpty()) {
                 ganadorRonda = j;
                 break;
             }
         }
-
         if (ganadorRonda != null) {
             int total = 0;
-
             for (Jugador j : this.jugadores) {
                 if (j != ganadorRonda) {
                     for (Ficha f : j.getMano()) {
@@ -62,46 +58,36 @@ public class Ronda {
                     }
                 }
             }
-
-            ganadorRonda.setPuntosPartida(
-                    ganadorRonda.getPuntosPartida() + total
-            );
-
+            ganadorRonda.setPuntosPartida(ganadorRonda.getPuntosPartida() + total);
             System.out.println("Ganador de la ronda: " + ganadorRonda.getNombre());
             System.out.println("Puntos sumados: " + total);
-
         } else {
             System.out.println("Todavía no hay ganador de la ronda");
         }
     }
 
-
-    public void generarFichas(){
-
-        for(int i=0; i<=6; i++){
-            for(int j=i; j<=6; j++){
+    public void generarFichas() {
+        for (int i = 0; i <= 6; i++) {
+            for (int j = i; j <= 6; j++) {
                 this.getPozo().getPozo().add(new Ficha(i, j));
             }
         }
         Collections.shuffle(this.getPozo().getPozo());
     }
 
-    public void repartirFichas(){
-        for (Jugador j:this.getJugadores()){
-            for(int k=0;k<7;k++){
-                Ficha f=this.getPozo().getPozo().getFirst();
+    public void repartirFichas() {
+        for (Jugador j : this.getJugadores()) {
+            for (int k = 0; k < 7; k++) {
+                Ficha f = this.getPozo().getPozo().getFirst();
                 j.getMano().add(f);
                 this.getPozo().getPozo().removeFirst();
             }
         }
     }
-    public void mostrarFichasJugadas(){
-        for(Ficha f:this.getFichasJugadas()){
-            String string = f.toString();
-            System.out.println(string);
-        }
-    }
 
+    public void robarFicha() {
+        this.getJugadorActual().robarFicha(this.getPozo().devolverPrimera());
+    }
 
     public Jugador getJugadorActual() {
         return jugadores.get(indiceJugadorActual);
@@ -110,15 +96,13 @@ public class Ronda {
     public void pasarAlSiguienteJugador() {
         indiceJugadorActual = (indiceJugadorActual + 1) % jugadores.size();
     }
-    public boolean puedeJugar(Jugador j) {
 
+    public boolean puedeJugar(Jugador j) {
         if (fichasJugadas.isEmpty()) {
             return true;
         }
-
         int izquierda = fichasJugadas.getFirst().getLado1();
-        int derecha   = fichasJugadas.getLast().getLado2();
-
+        int derecha = fichasJugadas.getLast().getLado2();
         for (Ficha f : j.getMano()) {
             if (f.getLado1().equals(izquierda) || f.getLado2().equals(izquierda)) {
                 return true;
@@ -127,12 +111,12 @@ public class Ronda {
                 return true;
             }
         }
-
         return false;
     }
-    public void jugarTurno(int indiceFichaElegida) {
 
+    public boolean jugarTurno(int indiceFichaElegida) {
         Jugador actual = getJugadorActual();
+
         if (fichasJugadas.isEmpty()) {
             Ficha f = actual.seleccionarFicha(indiceFichaElegida);
             if (f != null) {
@@ -140,27 +124,33 @@ public class Ronda {
                 actual.getMano().remove(indiceFichaElegida);
                 jugadoresQuePasaron = 0;
                 pasarAlSiguienteJugador();
+                return true;
             }
-            return;
+            return false;
         }
 
         if (puedeJugar(actual)) {
-            actual.colocarFicha(this, indiceFichaElegida);
+            boolean colocada = actual.colocarFicha(this, indiceFichaElegida);
+
+            if (!colocada) {
+                return false;
+            }
+
             jugadoresQuePasaron = 0;
 
             if (actual.getMano().isEmpty()) {
                 verificarFinRonda();
-                return;
+                return true;
             }
+
             pasarAlSiguienteJugador();
-            return;
+            return true;
         }
 
         if (!pozo.getPozo().isEmpty()) {
-            actual.robarFicha(this);
+            this.robarFicha();
             System.out.println(actual.getNombre() + " robó una ficha.");
-
-            return;
+            return true;
         }
 
         jugadoresQuePasaron++;
@@ -169,16 +159,31 @@ public class Ronda {
         if (jugadoresQuePasaron == jugadores.size()) {
             System.out.println("La ronda está bloqueada.");
             verificarFinRonda();
-            return;
+            return true;
         }
 
         pasarAlSiguienteJugador();
+        return true;
     }
+
 
     public boolean rondaBloqueada() {
         return jugadoresQuePasaron == jugadores.size();
     }
+    public boolean rondaFinalizada() {
+
+        for (Jugador j : jugadores) {
+            if (j.getMano().isEmpty()) {
+                return true;
+            }
+        }
+
+        if (rondaBloqueada()) {
+            return true;
+        }
+
+        return false;
+    }
 
 }
-
 
