@@ -14,9 +14,25 @@ public class VistaConsola {
         System.out.println("--------- MENU JUEGO ---------");
         System.out.println("1. Robar ficha");
         System.out.println("2. Colocar ficha");
-        System.out.println("3. Mostrar mesa");
-        System.out.println("4. Mostrar mano");
+        System.out.println("3. Pasar");
+        System.out.println("-------------");
         System.out.println("seleccione una opcion: ");
+    }
+    public void mostrarMenuInicial() {
+        System.out.println("====== DOMINÓ ======");
+        System.out.println("1. Iniciar juego");
+        System.out.println("2. Salir");
+        System.out.print("Elige una opción: ");
+    }
+
+    public String pedirNombreJugador(int numero) {
+        System.out.print("Nombre del jugador " + numero + ": ");
+        return sc.next();
+    }
+
+    public int pedirPuntosParaGanar() {
+        System.out.print("Puntos necesarios para ganar la partida: ");
+        return sc.nextInt();
     }
 
     public int obtenerOpcion(){

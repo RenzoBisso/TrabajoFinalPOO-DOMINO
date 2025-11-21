@@ -36,13 +36,7 @@ public class ControladorConsola implements Observador {
                     vista.mostrarMesa(modelo.getRonda());
                 }
             }
-
-
-
-
-
         }
-
         vista.mostrarMensaje("Ronda finalizada.");
     }
 

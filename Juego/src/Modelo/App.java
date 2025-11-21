@@ -4,19 +4,11 @@ import Modelo.Observer.Observable;
 import Modelo.Observer.Observador;
 
 public class App implements Observable {
-    private Ronda ronda;
     private Partida partida;
+    private Ronda ronda;
 
-    public App(Ronda ronda, Partida partida) {
-        this.ronda = ronda;
+    public App(Partida partida, Ronda ronda) {
         this.partida = partida;
-    }
-
-    public Ronda getRonda() {
-        return ronda;
-    }
-
-    public void setRonda(Ronda ronda) {
         this.ronda = ronda;
     }
 
@@ -24,8 +16,8 @@ public class App implements Observable {
         return partida;
     }
 
-    public void setPartida(Partida partida) {
-        this.partida = partida;
+    public Ronda getRonda() {
+        return ronda;
     }
 
     @Override
