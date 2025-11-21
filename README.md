@@ -22,6 +22,5 @@ El trabajo busca integrar todos los conocimientos adquiridos durante la cursada 
 - Lenguaje: **Java**  
 - Paradigma: **Programación Orientada a Objetos**  
 - Patrones de diseño: **MVC**, **Observer**  
-- Comunicación: **Sockets (cliente/servidor)**  
 - Persistencia: Base de datos
-- Interfaces: **Consola y Gráfica (Swing)**
+- Interfaces: **Consola y Gráfica (JavaFX)**
