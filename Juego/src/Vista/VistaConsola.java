@@ -52,7 +52,7 @@ public class VistaConsola {
     }
 
     public void mostrarJugador(Ronda r){
-        System.out.println(r.getJugadorActual().getNombre() + r.getJugadorActual().getPuntosPartida().toString());
+        System.out.println(r.getJugadorActual().getNombre() +"--->Puntos: "+r.getJugadorActual().getPuntosPartida().toString());
     }
     public int pedirIndiceFicha() {
         System.out.print("Elige el índice de la ficha a jugar: ");
