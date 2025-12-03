@@ -4,19 +4,18 @@ import java.util.ArrayList;
 
 public class Partida {
     private Tablero tablero;
-    private Integer tiempoPorTurno;
     private Estado estado;
-    private Integer ptosPartida;
-    private ArrayList<Jugador> jugadores;
+    private Integer tiempoPorTurno;
     private Jugador ganadorPartida;
+    private Integer ptosPartida;
 
-    public Partida(Tablero tablero, Integer tiempoPorTurno, Estado estado, Integer ptosPartida, ArrayList<Jugador> jugadores, Jugador ganadorPartida) {
+
+    public Partida(Tablero tablero, Integer tiempoPorTurno, Estado estado, Jugador ganadorPartida,Integer ptosPartida) {
         this.tablero = tablero;
         this.tiempoPorTurno = tiempoPorTurno;
         this.estado = estado;
-        this.ptosPartida = ptosPartida;
-        this.jugadores = jugadores;
         this.ganadorPartida = ganadorPartida;
+        this.ptosPartida=ptosPartida;
     }
 
     public Tablero getTablero() {
@@ -43,22 +42,6 @@ public class Partida {
         this.estado = estado;
     }
 
-    public Integer getPtosPartida() {
-        return ptosPartida;
-    }
-
-    public void setPtosPartida(Integer ptosPartida) {
-        this.ptosPartida = ptosPartida;
-    }
-
-    public ArrayList<Jugador> getJugadores() {
-        return jugadores;
-    }
-
-    public void setJugadores(ArrayList<Jugador> jugadores) {
-        this.jugadores = jugadores;
-    }
-
     public Jugador getGanadorPartida() {
         return ganadorPartida;
     }
@@ -67,7 +50,13 @@ public class Partida {
         this.ganadorPartida = ganadorPartida;
     }
 
+    public Integer getPtosPartida() {
+        return ptosPartida;
+    }
 
+    public void setPtosPartida(Integer ptosPartida) {
+        this.ptosPartida = ptosPartida;
+    }
 
 
 

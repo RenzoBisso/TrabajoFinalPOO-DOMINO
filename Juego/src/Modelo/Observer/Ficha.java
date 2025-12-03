@@ -6,11 +6,15 @@ public class Ficha {
     private boolean doble;
     private Integer valor;
 
-    public Ficha(Integer ladoA, Integer ladoB, boolean doble, Integer valor) {
+    public Ficha(Integer ladoA, Integer ladoB) {
         this.ladoA = ladoA;
         this.ladoB = ladoB;
-        this.doble = doble;
-        this.valor = valor;
+        if(ladoA.equals(ladoB)){
+            this.doble=true;
+        }else{
+            this.doble=false;
+        }
+        this.valor = ladoA+ladoB;
     }
 
     public Integer getLadoA() {

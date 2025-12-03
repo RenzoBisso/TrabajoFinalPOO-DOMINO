@@ -5,8 +5,10 @@ import java.util.ArrayList;
 public class Jugador {
 
     private String nombre;
+    private Integer indice;
     private ArrayList<Ficha> mano=new ArrayList<>();
     private Integer xp=0;
+    private Integer ptos=0;
 
 
     public Jugador(String nombre) {
@@ -35,5 +37,21 @@ public class Jugador {
 
     public void setXp(Integer xp) {
         this.xp = xp;
+    }
+
+    public Integer getIndice() {
+        return indice;
+    }
+
+    public void setIndice(Integer indice) {
+        this.indice = indice;
+    }
+
+    public Integer getPtos() {
+        return ptos;
+    }
+
+    public void setPtos(Integer ptos) {
+        this.ptos = ptos;
     }
 }
