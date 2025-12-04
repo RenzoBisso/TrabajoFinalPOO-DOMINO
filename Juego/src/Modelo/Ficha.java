@@ -1,4 +1,4 @@
-package Modelo.Observer;
+package Modelo;
 
 public class Ficha {
     private Integer ladoA;

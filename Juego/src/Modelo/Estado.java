@@ -1,4 +1,4 @@
-package Modelo.Observer;
+package Modelo;
 
 public enum Estado {
     EN_CURSO,

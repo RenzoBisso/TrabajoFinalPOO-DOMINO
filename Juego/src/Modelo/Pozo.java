@@ -1,4 +1,4 @@
-package Modelo.Observer;
+package Modelo;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,4 +41,20 @@ public class Pozo {
         return f;
 
     }
+
+    public void repartirFichas(ArrayList<Jugador> jugadores) {
+        for (Jugador j : jugadores) {
+            for (int f = 0; f <= 7; f++) {
+                Ficha ficha = sacarFicha();
+                j.getMano().add(ficha);
+            }
+        }
+    }
+    public Ficha tomarFicha(int pos){
+        return this.sacarFicha(pos);
+    }
+    public Ficha tomarFicha(){
+        return this.sacarFicha();
+    }
+
 }

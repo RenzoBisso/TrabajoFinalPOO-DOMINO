@@ -1,19 +1,17 @@
-package Modelo.Observer;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
+package Modelo;
+import Modelo.Observer.Observable;
+import Modelo.Observer.Observador;
 
-public class Ronda {
+import java.util.ArrayList;
+
+public class Ronda implements Observable {
     private Jugador jugadorActual;
     private Tablero tablero;
-    private ArrayList<Jugador> jugadores;
+    private ArrayList<Observador> observers = new ArrayList<>();
     private Partida partida;
 
-    public Ronda(Partida partida, ArrayList<Jugador> jugadores, Tablero tablero) {
+    public Ronda(Partida partida,Tablero tablero) {
         this.partida = partida;
-        this.jugadores = jugadores;
         this.tablero = tablero;
     }
 
@@ -33,13 +31,6 @@ public class Ronda {
         this.tablero = tablero;
     }
 
-    public ArrayList<Jugador> getJugadores() {
-        return jugadores;
-    }
-
-    public void setJugadores(ArrayList<Jugador> jugadores) {
-        this.jugadores = jugadores;
-    }
 
     public Partida getPartida() {
         return partida;
@@ -49,9 +40,17 @@ public class Ronda {
         this.partida = partida;
     }
 
+    public ArrayList<Observador> getObservers() {
+        return observers;
+    }
+
+    public void setObservers(ArrayList<Observador> observers) {
+        this.observers = observers;
+    }
+
     public void cargarIndices(){
         int count=0;
-        for(Jugador j:this.getJugadores()){
+        for(Jugador j:this.getTablero().getJugadores()){
             j.setIndice(count);
             count++;
         }
@@ -61,7 +60,7 @@ public class Ronda {
     public void jugadorInicial(){
         int max=-1;
         Jugador jAux=null;
-        for (Jugador j:this.getJugadores()){
+        for (Jugador j:this.getTablero().getJugadores()){
             for (Ficha f:j.getMano()){
                 if(f.getValor()>max){
                     max=f.getLadoA();
@@ -70,15 +69,17 @@ public class Ronda {
             }
         }
         this.setJugadorActual(jAux);
+        notificar();
     }
 
-    public void jugadorSiguiente(){
+    public void pasar(){
         int indiceActual=this.getJugadorActual().getIndice();
-        if(indiceActual==this.getJugadores().size()){
-            this.setJugadorActual(this.getJugadores().getFirst());
+        if(indiceActual == this.getTablero().getJugadores().size() - 1){
+            this.setJugadorActual(this.getTablero().getJugadores().getFirst());
         }else{
-            this.setJugadorActual(this.getJugadores().get(indiceActual+1));
+            this.setJugadorActual(this.getTablero().getJugadores().get(indiceActual+1));
         }
+        notificar();
     }
 
     public void colocarFicha(Ficha ficha,boolean lado){
@@ -91,7 +92,7 @@ public class Ronda {
                 if(this.getTablero().getFichaDer().getLadoB().equals(ficha.getLadoA())){
                     this.getTablero().getFichasJugadas().addLast(ficha);
                     this.getTablero().actualizarLados();
-                } else if (this.getTablero().getFichaDer().equals(ficha.getLadoB())) {
+                } else if (this.getTablero().getFichaDer().getLadoB().equals(ficha.getLadoB())) {
                     ficha.rotar();
                     this.getTablero().getFichasJugadas().addLast(ficha);
                     this.getTablero().actualizarLados();
@@ -100,13 +101,14 @@ public class Ronda {
                 if(this.getTablero().getFichaIzq().getLadoA().equals(ficha.getLadoB())){
                     this.getTablero().getFichasJugadas().addFirst(ficha);
                     this.getTablero().actualizarLados();
-                } else if (this.getTablero().getFichaIzq().equals(ficha.getLadoA())) {
+                } else if (this.getTablero().getFichaIzq().getLadoA().equals(ficha.getLadoA())) {
                     ficha.rotar();
                     this.getTablero().getFichasJugadas().addFirst(ficha);
                     this.getTablero().actualizarLados();
                 }
             }
         }
+        notificar();
         if(this.getJugadorActual().getMano().isEmpty()){
             this.finalizarRonda();
         }
@@ -119,7 +121,7 @@ public class Ronda {
                 if(this.getTablero().getFichaDer().getLadoB().equals(ficha.getLadoA())){
                     this.getTablero().getFichasJugadas().addLast(ficha);
                     this.getTablero().actualizarLados();
-                } else if (this.getTablero().getFichaDer().equals(ficha.getLadoB())) {
+                } else if (this.getTablero().getFichaDer().getLadoB().equals(ficha.getLadoB())) {
                     ficha.rotar();
                     this.getTablero().getFichasJugadas().addLast(ficha);
                     this.getTablero().actualizarLados();
@@ -127,7 +129,7 @@ public class Ronda {
                 if(this.getTablero().getFichaIzq().getLadoA().equals(ficha.getLadoB())){
                     this.getTablero().getFichasJugadas().addFirst(ficha);
                     this.getTablero().actualizarLados();
-                } else if (this.getTablero().getFichaIzq().equals(ficha.getLadoA())) {
+                } else if (this.getTablero().getFichaIzq().getLadoA().equals(ficha.getLadoA())) {
                     ficha.rotar();
                     this.getTablero().getFichasJugadas().addFirst(ficha);
                     this.getTablero().actualizarLados();
@@ -136,94 +138,113 @@ public class Ronda {
         if(this.getJugadorActual().getMano().isEmpty()){
             this.finalizarRonda();
         }
-        this.jugadorSiguiente();
+        notificar();
+        this.pasar();
 
     }
-
-    public void tomarFicha(int pos){
-        boolean flag=false;
-        while(!flag){
-            Ficha f=this.getTablero().getPozo().sacarFicha(pos);
-            this.getJugadorActual().getMano().add(f);
-            flag=this.verificarFichaValida(f);
-        }
-
-    }
-    public void tomarFicha(){
-        boolean flag=false;
-        while(!flag){
-            Ficha f=this.getTablero().getPozo().sacarFicha();
-            this.getJugadorActual().getMano().add(f);
-            flag=this.verificarFichaValida(f);
-        }
-
-    }
-
 
     public void finalizarRonda(){
         int indiceActual=this.getJugadorActual().getIndice();
         int count=0;
-        for (Jugador j:this.getJugadores()){
+        for (Jugador j:this.getTablero().getJugadores()){
             for(Ficha f:j.getMano()){
                 count+=f.getValor();
             }
         }
-        this.getJugadorActual().setPtos(this.getJugadorActual().getPtos()+count);
+
+        this.getPartida().sumarPuntos(this.getJugadorActual(),count);
         if(this.getJugadorActual().getPtos()>=this.getPartida().getPtosPartida()){
-            this.finalizarPartida();
+            this.getPartida().finalizarPartida(this.getJugadorActual());
         }
-        this.jugadorSiguiente();
+        notificar();
+        this.pasar();
     }
 
 
     public boolean verificarFichaValida(Ficha ficha){
-        if(this.getTablero().getFichaDer().getLadoB().equals(ficha.getLadoA())||this.getTablero().getFichaDer().equals(ficha.getLadoB())){
+        if(this.getTablero().getFichaDer().getLadoB().equals(ficha.getLadoA())||this.getTablero().getFichaDer().getLadoB().equals(ficha.getLadoB())){
             return true;
-        } else if(this.getTablero().getFichaIzq().getLadoA().equals(ficha.getLadoB())||this.getTablero().getFichaIzq().equals(ficha.getLadoA())){
+        } else if(this.getTablero().getFichaIzq().getLadoA().equals(ficha.getLadoB())||this.getTablero().getFichaIzq().getLadoA().equals(ficha.getLadoA())){
             return true;
         }
         return false;
     }
 
+    public void pedirFicha(int pos){
 
-    public void contador(){
-        AtomicInteger tiempo= new AtomicInteger(this.getPartida().getTiempoPorTurno());
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
-        scheduler.scheduleAtFixedRate(() -> {
-
-            tiempo.getAndDecrement();
-
-            if (tiempo.get() < 0) {
-                boolean flag=false;
-                for (Ficha f:this.getJugadorActual().getMano()){
-                    if(this.verificarFichaValida(f)){
-                        this.colocarFicha(f);
-                    }
-                }
-                this.tomarFicha();
-                for (Ficha f:this.getJugadorActual().getMano()){
-                    if(this.verificarFichaValida(f)){
-                        this.colocarFicha(f);
-                    }
-                }
-                scheduler.shutdown(); // detener
+        boolean flag=false;
+        while(!flag){
+            if (this.getTablero().getPozo().getFichas().isEmpty()) {
+                this.pasar();
             }
-
-        }, 0, 1, TimeUnit.SECONDS);
-        this.jugadorSiguiente();
+            Ficha f=this.getTablero().getPozo().tomarFicha(pos);
+            flag=this.verificarFichaValida(f);
+            if(flag){
+                this.getJugadorActual().getMano().add(f);
+            }
+        }
+        notificar();
     }
 
-
-
-    public void finalizarPartida(){
-            int indice=this.getJugadorActual().getIndice();
-            this.getJugadorActual().setXp(this.getJugadorActual().getXp()+this.getJugadores().size()*10);
-            for(Jugador j:this.getJugadores()){
-                if(j.getIndice()!=indice){
-                    j.setXp(j.getXp()+5);
-                }
+    public void pedirFicha(){
+        boolean flag=false;
+        Ficha fAux;
+        while(!flag){
+            if (this.getTablero().getPozo().getFichas().isEmpty()) {
+                this.pasar();
             }
+            Ficha f=this.getTablero().getPozo().tomarFicha();
+            flag=this.verificarFichaValida(f);
+            if(flag){
+                this.getJugadorActual().getMano().add(f);
+            }
+        }
+        notificar();
+    }
+
+//    public void contador(){
+//        AtomicInteger tiempo= new AtomicInteger(this.getPartida().getTiempoPorTurno());
+//        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+//
+//        scheduler.scheduleAtFixedRate(() -> {
+//
+//            tiempo.getAndDecrement();
+//
+//            if (tiempo.get() < 0) {
+//                boolean flag=false;
+//                for (Ficha f:this.getJugadorActual().getMano()){
+//                    if(this.verificarFichaValida(f)){
+//                        this.colocarFicha(f);
+//                    }
+//                }
+//                this.pedirFicha();
+//                for (Ficha f:this.getJugadorActual().getMano()){
+//                    if(this.verificarFichaValida(f)){
+//                        this.colocarFicha(f);
+//                    }
+//                }
+//                scheduler.shutdown(); // detener
+//            }
+//
+//        }, 0, 1, TimeUnit.SECONDS);
+//        this.pasar();
+//    }
+
+    @Override
+    public void agregarObservador(Observador observador) {
+        this.getObservers().add(observador);
+    }
+
+    @Override
+    public void quitarObservador(Observador observador) {
+        this.getObservers().remove(observador);
+    }
+
+    @Override
+    public void notificar() {
+        for (Observador o:this.getObservers()){
+            o.actualizar();
+        }
     }
 }
 

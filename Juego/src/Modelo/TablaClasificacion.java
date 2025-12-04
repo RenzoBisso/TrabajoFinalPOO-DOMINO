@@ -1,8 +1,12 @@
-package Modelo.Observer;
+package Modelo;
 
 import java.util.ArrayList;
 
 public class TablaClasificacion {
 
     private ArrayList<Jugador>jugadores=new ArrayList<>();
+
+
+
+
 }
