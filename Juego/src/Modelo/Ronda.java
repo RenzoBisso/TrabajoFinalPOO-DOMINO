@@ -65,7 +65,7 @@ public class Ronda implements Observable {
         for (Jugador j:this.getTablero().getJugadores()){
             for (Ficha f:j.getMano()){
                 if(f.getValor()>max){
-                    max=f.getLadoA();
+                    max=f.getValor();
                     jAux=j;
                 }
             }

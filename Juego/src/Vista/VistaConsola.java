@@ -6,7 +6,7 @@ import Modelo.Jugador;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class VistaConsola {
+public class VistaConsola implements Vista{
     private Scanner sc=new Scanner(System.in);
 
     public VistaConsola() {
