@@ -13,6 +13,13 @@ public class Tablero implements Observable {
     private Pozo pozo;
     private ArrayList<Jugador> jugadores;
 
+    public Tablero(ArrayList<Jugador>jugadores) {
+        this.pozo=new Pozo();
+        this.jugadores=jugadores;
+        this.getPozo().cargarFichas();
+        this.getPozo().repartirFichas(this.getJugadores());
+    }
+
     public ArrayList<Observador> getObservers() {
         return observers;
     }

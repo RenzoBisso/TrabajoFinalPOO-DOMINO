@@ -13,6 +13,8 @@ public class Ronda implements Observable {
     public Ronda(Partida partida,Tablero tablero) {
         this.partida = partida;
         this.tablero = tablero;
+        this.cargarIndices();
+        this.jugadorInicial();
     }
 
     public Jugador getJugadorActual() {
@@ -81,11 +83,22 @@ public class Ronda implements Observable {
         }
         notificar();
     }
+    public Ficha seleccionarFichaMano(int pos){
+        if(pos<0||pos>this.getJugadorActual().getMano().size()){
+            return null;
+        }
+        Ficha f=this.getJugadorActual().getMano().get(pos);
+        this.getJugadorActual().getMano().remove(pos);
+        return f;
+    }
 
     public void colocarFicha(Ficha ficha,boolean lado){
         if(this.getTablero().getFichasJugadas().isEmpty()){
             this.getTablero().getFichasJugadas().add(ficha);
             this.getJugadorActual().getMano().remove(ficha);
+            this.getTablero().setFichaDer(ficha);
+            this.getTablero().setFichaIzq(ficha);
+            notificar();
         }else{
             //lado == true Derecho || lado==false Izquierda
             if(lado){
@@ -97,6 +110,7 @@ public class Ronda implements Observable {
                     this.getTablero().getFichasJugadas().addLast(ficha);
                     this.getTablero().actualizarLados();
                 }
+                notificar();
             }else{
                 if(this.getTablero().getFichaIzq().getLadoA().equals(ficha.getLadoB())){
                     this.getTablero().getFichasJugadas().addFirst(ficha);
@@ -106,9 +120,9 @@ public class Ronda implements Observable {
                     this.getTablero().getFichasJugadas().addFirst(ficha);
                     this.getTablero().actualizarLados();
                 }
+                notificar();
             }
         }
-        notificar();
         if(this.getJugadorActual().getMano().isEmpty()){
             this.finalizarRonda();
         }
@@ -117,6 +131,8 @@ public class Ronda implements Observable {
         if(this.getTablero().getFichasJugadas().isEmpty()){
             this.getTablero().getFichasJugadas().add(ficha);
             this.getJugadorActual().getMano().remove(ficha);
+            this.getTablero().setFichaDer(ficha);
+            this.getTablero().setFichaIzq(ficha);
         }else{
                 if(this.getTablero().getFichaDer().getLadoB().equals(ficha.getLadoA())){
                     this.getTablero().getFichasJugadas().addLast(ficha);
@@ -161,7 +177,10 @@ public class Ronda implements Observable {
     }
 
 
-    public boolean verificarFichaValida(Ficha ficha){
+    public boolean  verificarFichaValida(Ficha ficha){
+        if(this.getTablero().getFichaDer()==null && this.getTablero().getFichaIzq()==null ){
+            return true;
+        }
         if(this.getTablero().getFichaDer().getLadoB().equals(ficha.getLadoA())||this.getTablero().getFichaDer().getLadoB().equals(ficha.getLadoB())){
             return true;
         } else if(this.getTablero().getFichaIzq().getLadoA().equals(ficha.getLadoB())||this.getTablero().getFichaIzq().getLadoA().equals(ficha.getLadoA())){
@@ -183,7 +202,6 @@ public class Ronda implements Observable {
                 this.getJugadorActual().getMano().add(f);
             }
         }
-        notificar();
     }
 
     public void pedirFicha(){
@@ -199,7 +217,6 @@ public class Ronda implements Observable {
                 this.getJugadorActual().getMano().add(f);
             }
         }
-        notificar();
     }
 
 //    public void contador(){

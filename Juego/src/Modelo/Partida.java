@@ -6,6 +6,7 @@ import Modelo.Observer.Observador;
 import java.util.ArrayList;
 
 public class Partida implements Observable {
+    private Integer idPartida;
     private Tablero tablero;
     private Estado estado;
     private Integer tiempoPorTurno;
@@ -13,11 +14,11 @@ public class Partida implements Observable {
     private Integer ptosPartida;
     private ArrayList<Observador> observadores = new ArrayList<>();
 
-    public Partida(Tablero tablero, Integer tiempoPorTurno, Estado estado, Jugador ganadorPartida,Integer ptosPartida) {
+    public Partida(Integer idPartida,Tablero tablero, Integer tiempoPorTurno, Estado estado,Integer ptosPartida) {
+        this.idPartida=idPartida;
         this.tablero = tablero;
         this.tiempoPorTurno = tiempoPorTurno;
         this.estado = estado;
-        this.ganadorPartida = ganadorPartida;
         this.ptosPartida=ptosPartida;
     }
 

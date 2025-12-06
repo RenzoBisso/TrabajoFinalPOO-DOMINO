@@ -4,11 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Pozo {
-    private ArrayList<Ficha> fichas;
-
-    public Pozo(ArrayList<Ficha> fichas) {
-        this.fichas = fichas;
-    }
+    private ArrayList<Ficha> fichas=new ArrayList<>();
 
     public ArrayList<Ficha> getFichas() {
         return fichas;
@@ -22,6 +18,7 @@ public class Pozo {
         for (int k=0;k<=6;k++){
             for(int j=k;j<=6;j++){
                 Ficha f=new Ficha(k,j);
+                this.getFichas().add(f);
             }
         }
         Collections.shuffle(this.getFichas());
