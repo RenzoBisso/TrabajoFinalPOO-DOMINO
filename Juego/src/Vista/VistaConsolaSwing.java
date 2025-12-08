@@ -165,7 +165,16 @@ public class VistaConsolaSwing extends JFrame implements Vista {
     @Override
     public String solicitarDato(String dato) {
         mostrarMensaje("Ingrese " + dato + ":");
-        return leer();
+        String input;
+        while (true) {
+            input = leer();
+            if (input == null) {
+                return null;
+            }
+            input = input.trim();
+            if (!input.isEmpty()) return input;
+            mostrarMensaje("Entrada vacía. Ingrese " + dato + " nuevamente:");
+        }
     }
 
     @Override
@@ -179,7 +188,7 @@ public class VistaConsolaSwing extends JFrame implements Vista {
             return colaEntrada.take();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            return "";
+            return null;
         }
     }
 }

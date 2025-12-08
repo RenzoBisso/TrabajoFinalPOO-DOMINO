@@ -81,7 +81,6 @@ public class Ronda implements Observable {
         }else{
             this.setJugadorActual(this.getTablero().getJugadores().get(indiceActual+1));
         }
-        notificar();
     }
     public Ficha seleccionarFichaMano(int pos){
         if(pos<0||pos>this.getJugadorActual().getMano().size()){
@@ -92,72 +91,115 @@ public class Ronda implements Observable {
         return f;
     }
 
-    public void colocarFicha(Ficha ficha,boolean lado){
-        if(this.getTablero().getFichasJugadas().isEmpty()){
-            this.getTablero().getFichasJugadas().add(ficha);
-            this.getJugadorActual().getMano().remove(ficha);
-            this.getTablero().setFichaDer(ficha);
-            this.getTablero().setFichaIzq(ficha);
-            notificar();
-        }else{
-            //lado == true Derecho || lado==false Izquierda
-            if(lado){
-                if(this.getTablero().getFichaDer().getLadoB().equals(ficha.getLadoA())){
-                    this.getTablero().getFichasJugadas().addLast(ficha);
-                    this.getTablero().actualizarLados();
-                } else if (this.getTablero().getFichaDer().getLadoB().equals(ficha.getLadoB())) {
-                    ficha.rotar();
-                    this.getTablero().getFichasJugadas().addLast(ficha);
-                    this.getTablero().actualizarLados();
-                }
-                notificar();
-            }else{
-                if(this.getTablero().getFichaIzq().getLadoA().equals(ficha.getLadoB())){
-                    this.getTablero().getFichasJugadas().addFirst(ficha);
-                    this.getTablero().actualizarLados();
-                } else if (this.getTablero().getFichaIzq().getLadoA().equals(ficha.getLadoA())) {
-                    ficha.rotar();
-                    this.getTablero().getFichasJugadas().addFirst(ficha);
-                    this.getTablero().actualizarLados();
-                }
-                notificar();
-            }
-        }
-        if(this.getJugadorActual().getMano().isEmpty()){
-            this.finalizarRonda();
-        }
-    }
-    public void colocarFicha(Ficha ficha){
-        if(this.getTablero().getFichasJugadas().isEmpty()){
-            this.getTablero().getFichasJugadas().add(ficha);
-            this.getJugadorActual().getMano().remove(ficha);
-            this.getTablero().setFichaDer(ficha);
-            this.getTablero().setFichaIzq(ficha);
-        }else{
-                if(this.getTablero().getFichaDer().getLadoB().equals(ficha.getLadoA())){
-                    this.getTablero().getFichasJugadas().addLast(ficha);
-                    this.getTablero().actualizarLados();
-                } else if (this.getTablero().getFichaDer().getLadoB().equals(ficha.getLadoB())) {
-                    ficha.rotar();
-                    this.getTablero().getFichasJugadas().addLast(ficha);
-                    this.getTablero().actualizarLados();
-                }
-                if(this.getTablero().getFichaIzq().getLadoA().equals(ficha.getLadoB())){
-                    this.getTablero().getFichasJugadas().addFirst(ficha);
-                    this.getTablero().actualizarLados();
-                } else if (this.getTablero().getFichaIzq().getLadoA().equals(ficha.getLadoA())) {
-                    ficha.rotar();
-                    this.getTablero().getFichasJugadas().addFirst(ficha);
-                    this.getTablero().actualizarLados();
-                }
-            }
-        if(this.getJugadorActual().getMano().isEmpty()){
-            this.finalizarRonda();
-        }
-        notificar();
-        this.pasar();
+    public void colocarFicha(Ficha ficha, boolean lado) {
+        boolean colocada = false;
 
+        if (this.getTablero().getFichasJugadas().isEmpty()) {
+            this.getTablero().getFichasJugadas().add(ficha);
+            this.getJugadorActual().getMano().remove(ficha);
+            this.getTablero().setFichaDer(ficha);
+            this.getTablero().setFichaIzq(ficha);
+            colocada = true;
+        } else {
+
+            if (lado) {
+                Ficha fd = this.getTablero().getFichaDer();
+
+                if (fd.getLadoB().equals(ficha.getLadoA())) {
+                    this.getTablero().getFichasJugadas().addLast(ficha);
+                    colocada = true;
+
+                } else if (fd.getLadoB().equals(ficha.getLadoB())) {
+                    ficha.rotar();
+                    this.getTablero().getFichasJugadas().addLast(ficha);
+                    colocada = true;
+                }
+
+            } else {
+                Ficha fi = this.getTablero().getFichaIzq();
+
+                if (fi.getLadoA().equals(ficha.getLadoB())) {
+                    this.getTablero().getFichasJugadas().addFirst(ficha);
+                    colocada = true;
+
+                } else if (fi.getLadoA().equals(ficha.getLadoA())) {
+                    ficha.rotar();
+                    this.getTablero().getFichasJugadas().addFirst(ficha);
+                    colocada = true;
+                }
+            }
+
+            if (colocada) {
+                this.getTablero().actualizarLados();
+                this.getJugadorActual().getMano().remove(ficha);
+            }
+        }
+
+        if (colocada) {
+            notificar();
+        } else {
+            return;
+        }
+
+        if (this.getJugadorActual().getMano().isEmpty()) {
+            this.finalizarRonda();
+        }
     }
+
+    public void colocarFicha(Ficha ficha) {
+        boolean colocada = false;
+
+        if (this.getTablero().getFichasJugadas().isEmpty()) {
+            this.getTablero().getFichasJugadas().add(ficha);
+            this.getJugadorActual().getMano().remove(ficha);
+            this.getTablero().setFichaDer(ficha);
+            this.getTablero().setFichaIzq(ficha);
+            colocada = true;
+
+        } else {
+            if (!colocada) {
+                Ficha der = this.getTablero().getFichaDer();
+
+                if (der.getLadoB().equals(ficha.getLadoA())) {
+                    this.getTablero().getFichasJugadas().addLast(ficha);
+                    colocada = true;
+                } else if (der.getLadoB().equals(ficha.getLadoB())) {
+                    ficha.rotar();
+                    this.getTablero().getFichasJugadas().addLast(ficha);
+                    colocada = true;
+                }
+            }
+
+            if (!colocada) {
+                Ficha izq = this.getTablero().getFichaIzq();
+
+                if (izq.getLadoA().equals(ficha.getLadoB())) {
+                    this.getTablero().getFichasJugadas().addFirst(ficha);
+                    colocada = true;
+                } else if (izq.getLadoA().equals(ficha.getLadoA())) {
+                    ficha.rotar();
+                    this.getTablero().getFichasJugadas().addFirst(ficha);
+                    colocada = true;
+                }
+            }
+
+            if (colocada) {
+                this.getJugadorActual().getMano().remove(ficha);
+                this.getTablero().actualizarLados();
+            }
+        }
+
+        if (!colocada) {
+            return;
+        }
+
+        notificar();
+
+        if (this.getJugadorActual().getMano().isEmpty()) {
+            this.finalizarRonda();
+        }
+    }
+
 
     public void finalizarRonda(){
         int indiceActual=this.getJugadorActual().getIndice();
@@ -200,6 +242,7 @@ public class Ronda implements Observable {
             flag=this.verificarFichaValida(f);
             if(flag){
                 this.getJugadorActual().getMano().add(f);
+                this.getTablero().getPozo().getFichas().remove(pos);
             }
         }
     }
@@ -215,6 +258,7 @@ public class Ronda implements Observable {
             flag=this.verificarFichaValida(f);
             if(flag){
                 this.getJugadorActual().getMano().add(f);
+                this.getTablero().getPozo().getFichas().remove(f);
             }
         }
     }

@@ -12,11 +12,11 @@ public class Main {
 
         Jugador j1 = new Jugador("Renzo");
         Jugador j2 = new Jugador("Francisco");
-        Jugador j3 = new Jugador("Juan");
+
 
         jugadores.add(j1);
         jugadores.add(j2);
-        jugadores.add(j3);
+
 
         Tablero tablero = new Tablero(jugadores);
         Partida partida = new Partida(1, tablero, 50, Estado.EN_CURSO, 100);
@@ -26,7 +26,6 @@ public class Main {
         ArrayList<Vista> vistas = new ArrayList<>();
         vistas.add(new VistaConsolaSwing("Ventana 1"));
         vistas.add(new VistaConsolaSwing("Ventana 2"));
-        vistas.add(new VistaConsolaSwing("Ventana 3"));
 
         ControladorConsola controlador =
                 new ControladorConsola(ronda, vistas);
