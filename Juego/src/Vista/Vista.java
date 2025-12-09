@@ -15,6 +15,8 @@ public interface Vista {
     void mostrarFichasEnMesa(ArrayList<Ficha> fichas);
     void mostrarFichasEnMano(ArrayList<Ficha> fichas);
     void mostrarFichasPozo(ArrayList<Ficha> fichas);
+    void mostrarPtos(ArrayList<Jugador>jugadores);
+
 
     String solicitarDato(String dato);
     void mostrarMensaje(String s);

@@ -27,65 +27,43 @@ public class ControladorConsola implements Observador {
             vistaActual.mostrarMensaje("Turno de:");
             vistaActual.mostrarJugador(modelo.getJugadorActual());
             vistaActual.mostrarMensaje("================================");
-
+            vistaActual.mostrarFichasEnMesa(modelo.getTablero().getFichasJugadas());
+            vistaActual.mostrarFichasEnMano(modelo.getJugadorActual().getMano());
             vistaActual.menuAcciones();
             int opcion = vistaActual.obtenerOpcion();
-
             switch (opcion) {
-
                 case 1:
-                    vistaActual.mostrarFichasEnMano(
-                            modelo.getJugadorActual().getMano()
-                    );
-                    break;
-
-                case 2:
-                    vistaActual.mostrarFichasEnMesa(
-                            modelo.getTablero().getFichasJugadas()
-                    );
-                    break;
-
-                case 3:
-                    vistaActual.mostrarFichasPozo(
-                            modelo.getTablero().getPozo().getFichas()
-                    );
+                    vistaActual.mostrarFichasPozo(modelo.getTablero().getPozo().getFichas());
+                    vistaActual.mostrarMensaje("Tomando Ficha");
                     String indice = vistaActual.solicitarDato("Indice de la ficha");
-                    modelo.pedirFicha(Integer.parseInt(indice));
+                    boolean ok = modelo.pedirFicha(Integer.parseInt(indice));
+                    if (!ok) {
+                        vistaActual.mostrarMensaje("La ficha no sirve. Intente con otra.");
+                    } else {
+                        vistaActual.mostrarMensaje("Tomaste la ficha correctamente.");
+                    }
                     break;
-
-                case 4:
+                case 2:
+                    vistaActual.mostrarFichasEnMesa(modelo.getTablero().getFichasJugadas());
+                    vistaActual.mostrarMensaje("Colocando Ficha");
                     vistaActual.mostrarFichasEnMano(
                             modelo.getJugadorActual().getMano()
                     );
-
                     String pos = vistaActual.solicitarDato("Indice de la ficha");
                     String s = vistaActual.solicitarDato("Lado a colocar (true=derecha, false=izquierda)");
-
                     Ficha f = modelo.seleccionarFichaMano(Integer.parseInt(pos));
-
                     boolean flag = modelo.verificarFichaValida(f);
-
                     if (flag) {
                         vistaActual.mostrarMensaje("Se coloco la ficha");
                         modelo.colocarFicha(f, Boolean.parseBoolean(s));
-                        modelo.pasar();
+                        vistaActual.mostrarPtos(modelo.getTablero().getJugadores());
                         avanzarTurno();
                     } else {
                         vistaActual.mostrarMensaje("No se puede colocar la ficha");
                     }
                     break;
-
-                case 5:
-                    modelo.pasar();
-                    avanzarTurno();
-                    break;
-
-                case 6:
-                    vistaActual.mostrarFichasPozo(
-                            modelo.getTablero().getPozo().getFichas()
-                    );
-                    break;
-
+                case 3:
+                    vistaActual.mostrarMensaje("Saliendo de la partida");
                 default:
                     vistaActual.mostrarMensaje("Opcion invalida");
             }

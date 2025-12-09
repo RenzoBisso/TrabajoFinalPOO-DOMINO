@@ -100,6 +100,11 @@ public class VistaConsola implements Vista{
 
     }
 
+    @Override
+    public void mostrarPtos(ArrayList<Jugador> jugadores) {
+
+    }
+
     public String solicitarDato(String dato){
         System.out.println("Ingrese "+ dato+":");
         sc.nextLine();

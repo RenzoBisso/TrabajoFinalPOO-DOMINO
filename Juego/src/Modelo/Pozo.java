@@ -25,18 +25,19 @@ public class Pozo {
     }
 
     public Ficha sacarFicha(int pos){
-        if(pos<0 || pos>this.getFichas().size()){
+        if(pos < 0 || pos >= this.getFichas().size()){
             System.out.println("Error, posicion invalida.");
             return null;
         }else{
-            return this.getFichas().get(pos);
+            Ficha f = this.getFichas().get(pos);
+            this.getFichas().remove(pos);
+            return f;
         }
     }
     public Ficha sacarFicha(){
         Ficha f=this.getFichas().getFirst();
         this.getFichas().removeFirst();
         return f;
-
     }
 
     public void repartirFichas(ArrayList<Jugador> jugadores) {

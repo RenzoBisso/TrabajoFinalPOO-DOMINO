@@ -85,19 +85,18 @@ public class VistaConsolaSwing extends JFrame implements Vista {
     @Override
     public void menuAcciones() {
         mostrarMensaje("##########MENU##########");
-        mostrarMensaje("1. Mostrar mano");
-        mostrarMensaje("2. Mostrar mesa");
-        mostrarMensaje("3. Tomar ficha");
-        mostrarMensaje("4. Colocar ficha");
-        mostrarMensaje("5. Pasar");
-        mostrarMensaje("6. Mostrar pozo");
-        mostrarMensaje("0. Salir");
+        mostrarMensaje("1. Tomar ficha del pozo");
+        mostrarMensaje("2. Colocar ficha");
+        mostrarMensaje("3. Salir");
     }
 
     @Override
     public void mostrarJugador(Jugador j) {
         mostrarMensaje(j.getNombre());
     }
+
+
+
 
     @Override
     public void mostrarFichasEnMesa(ArrayList<Ficha> fichas) {
@@ -160,6 +159,14 @@ public class VistaConsolaSwing extends JFrame implements Vista {
             }
         }
         mostrarMensaje(" ");
+    }
+
+    @Override
+    public void mostrarPtos(ArrayList<Jugador> jugadores) {
+        mostrarMensaje("Puntos de jugadores");
+        for (Jugador j:jugadores){
+            mostrarMensaje(j.getNombre()+j.getPtos());
+        }
     }
 
     @Override
