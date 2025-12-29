@@ -42,7 +42,7 @@ public class Pozo {
 
     public void repartirFichas(ArrayList<Jugador> jugadores) {
         for (Jugador j : jugadores) {
-            for (int f = 0; f <= 7; f++) {
+            for (int f = 0; f <= 6; f++) {
                 Ficha ficha = sacarFicha();
                 j.getMano().add(ficha);
             }

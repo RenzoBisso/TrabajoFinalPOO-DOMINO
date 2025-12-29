@@ -87,7 +87,9 @@ public class VistaConsolaSwing extends JFrame implements Vista {
         mostrarMensaje("##########MENU##########");
         mostrarMensaje("1. Tomar ficha del pozo");
         mostrarMensaje("2. Colocar ficha");
-        mostrarMensaje("3. Salir");
+        mostrarMensaje("3. Rendirse");
+        mostrarMensaje("4. Pasar");
+        mostrarMensaje("0. Salir");
     }
 
     @Override
@@ -152,6 +154,7 @@ public class VistaConsolaSwing extends JFrame implements Vista {
 
         if (fichas.isEmpty()) {
             mostrarMensaje("El pozo esta vacio");
+            return;
         } else {
             for (Ficha f : fichas) {
                 mostrarMensaje("[" + count + "]");
@@ -165,7 +168,7 @@ public class VistaConsolaSwing extends JFrame implements Vista {
     public void mostrarPtos(ArrayList<Jugador> jugadores) {
         mostrarMensaje("Puntos de jugadores");
         for (Jugador j:jugadores){
-            mostrarMensaje(j.getNombre()+j.getPtos());
+            mostrarMensaje(j.getNombre()+" "+j.getPtos());
         }
     }
 

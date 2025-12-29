@@ -113,4 +113,16 @@ public class Tablero implements Observable {
             o.actualizar();
         }
     }
+
+    public void reiniciarTablero() {
+        fichasJugadas.clear();
+        fichaIzq = null;
+        fichaDer = null;
+        for (Jugador j : jugadores) {
+            j.getMano().clear();
+        }
+        this.getPozo().getFichas().clear();
+        this.getPozo().cargarFichas();
+        this.getPozo().repartirFichas(this.getJugadores());
+    }
 }

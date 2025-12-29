@@ -17,7 +17,6 @@ public interface Vista {
     void mostrarFichasPozo(ArrayList<Ficha> fichas);
     void mostrarPtos(ArrayList<Jugador>jugadores);
 
-
     String solicitarDato(String dato);
     void mostrarMensaje(String s);
 }

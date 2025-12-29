@@ -30,13 +30,10 @@ public class VistaConsola implements Vista{
 
     public void menuAcciones(){
         System.out.println("##########MENU##########");
-        System.out.println("1. Mostrar mano");
-        System.out.println("2. Mostrar mesa");
-        System.out.println("3. Tomar ficha");
-        System.out.println("4. Colocar ficha");
-        System.out.println("5. Pasar");
-        System.out.println("6. Mostrar pozo");
-        System.out.println("0. Salir");
+        mostrarMensaje("1. Tomar ficha del pozo");
+        mostrarMensaje("2. Colocar ficha");
+        mostrarMensaje("3. Rendirse");
+        mostrarMensaje("0. Salir");
     }
 
     public void mostrarJugador(Jugador j){

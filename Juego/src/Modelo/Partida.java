@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class Partida implements Observable {
     private Integer idPartida;
     private Tablero tablero;
+    private Ronda rondaActual;
     private Estado estado;
     private Integer tiempoPorTurno;
     private Jugador ganadorPartida;
@@ -57,7 +58,9 @@ public class Partida implements Observable {
         this.ganadorPartida = ganadorPartida;
         notificar();
     }
-
+    public Ronda getRondaActual() {
+        return rondaActual;
+    }
     public Integer getPtosPartida() {
         return ptosPartida;
     }
@@ -106,6 +109,11 @@ public class Partida implements Observable {
         for (Observador o:this.getObservadores()){
             o.actualizar();
         }
+    }
+
+    public void iniciarNuevaRonda() {
+        tablero.reiniciarTablero(); // limpia fichas jugadas, pozo, manos, etc
+        rondaActual = new Ronda(this, tablero);
     }
 }
 

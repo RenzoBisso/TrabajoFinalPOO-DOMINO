@@ -34,6 +34,13 @@ public class Ronda implements Observable {
         this.tablero = tablero;
     }
 
+    public int getTurno() {
+        return turno;
+    }
+
+    public void setTurno(int turno) {
+        this.turno = turno;
+    }
 
     public Partida getPartida() {
         return partida;
@@ -76,28 +83,33 @@ public class Ronda implements Observable {
     }
 
     public void pasar() {
-        turno++;
-        if (turno >= this.getTablero().getJugadores().size()) {
-            turno = 0;
+        this.setTurno(this.getTurno()+1);
+        if (this.getTurno() >= this.getTablero().getJugadores().size()) {
+            this.setTurno(0);
         }
 
         this.setJugadorActual(
-                this.getTablero().getJugadores().get(turno)
+                this.getTablero().getJugadores().get(this.getTurno())
         );
     }
 
-    public Ficha seleccionarFichaMano(int pos){
-        if(pos<0||pos>this.getJugadorActual().getMano().size()){
+    public Ficha seleccionarFichaMano(int pos) {
+        if (pos < 0 || pos >= this.getJugadorActual().getMano().size()) {
             return null;
         }
-        Ficha f=this.getJugadorActual().getMano().get(pos);
-        if(this.verificarFichaValida(f)){
-            this.getJugadorActual().getMano().remove(pos);
+
+        Ficha f = this.getJugadorActual().getMano().get(pos);
+
+        if (this.verificarFichaValida(f)) {
+            return this.getJugadorActual().getMano().remove(pos);
+        } else {
+            return null;
         }
-        return f;
     }
 
     public void colocarFicha(Ficha ficha, boolean lado) {
+        if (ficha == null) return;
+
         boolean colocada = false;
 
         if (this.getTablero().getFichasJugadas().isEmpty()) {
@@ -106,47 +118,38 @@ public class Ronda implements Observable {
             this.getTablero().setFichaIzq(ficha);
             colocada = true;
         } else {
-
             if (lado) {
                 Ficha fd = this.getTablero().getFichaDer();
-
                 if (fd.getLadoB().equals(ficha.getLadoA())) {
                     this.getTablero().getFichasJugadas().addLast(ficha);
                     colocada = true;
-
                 } else if (fd.getLadoB().equals(ficha.getLadoB())) {
                     ficha.rotar();
                     this.getTablero().getFichasJugadas().addLast(ficha);
                     colocada = true;
                 }
-
             } else {
                 Ficha fi = this.getTablero().getFichaIzq();
-
                 if (fi.getLadoA().equals(ficha.getLadoB())) {
                     this.getTablero().getFichasJugadas().addFirst(ficha);
                     colocada = true;
-
                 } else if (fi.getLadoA().equals(ficha.getLadoA())) {
                     ficha.rotar();
                     this.getTablero().getFichasJugadas().addFirst(ficha);
                     colocada = true;
                 }
             }
-
-            if (colocada) {
-                this.getTablero().actualizarLados();
-            }
         }
 
         if (colocada) {
-            notificar();
-        } else {
-            return;
-        }
+            this.getTablero().actualizarLados();
 
-        if (this.getJugadorActual().getMano().isEmpty()) {
-            this.finalizarRonda();
+            if (this.getJugadorActual().getMano().isEmpty()) {
+                this.finalizarRonda();
+            } else {
+                this.pasar();
+                notificar();
+            }
         }
     }
     public void finalizarRonda(){
@@ -163,7 +166,7 @@ public class Ronda implements Observable {
             this.getPartida().finalizarPartida(this.getJugadorActual());
         }
         notificar();
-        this.pasar();
+        this.getPartida().iniciarNuevaRonda();
     }
 
 
@@ -180,13 +183,12 @@ public class Ronda implements Observable {
     }
 
     public boolean pedirFicha(int pos) {
-
         if (this.getTablero().getPozo().getFichas().isEmpty()) {
             this.pasar();
             return false;
         }
 
-        if (pos < 0 || pos >= this.getTablero().getPozo().getFichas().size()) {
+        if (pos < 0 || pos > this.getTablero().getPozo().getFichas().size()) {
             return false;
         }
 
@@ -194,7 +196,6 @@ public class Ronda implements Observable {
 
         boolean valida = this.verificarFichaValida(f);
         this.getJugadorActual().getMano().add(f);
-        this.getTablero().getPozo().getFichas().remove(pos);
         return valida;
     }
 
@@ -217,35 +218,6 @@ public class Ronda implements Observable {
 
         return false;
     }
-
-//    public void contador(){
-//        AtomicInteger tiempo= new AtomicInteger(this.getPartida().getTiempoPorTurno());
-//        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-//
-//        scheduler.scheduleAtFixedRate(() -> {
-//
-//            tiempo.getAndDecrement();
-//
-//            if (tiempo.get() < 0) {
-//                boolean flag=false;
-//                for (Ficha f:this.getJugadorActual().getMano()){
-//                    if(this.verificarFichaValida(f)){
-//                        this.colocarFicha(f);
-//                    }
-//                }
-//                this.pedirFicha();
-//                for (Ficha f:this.getJugadorActual().getMano()){
-//                    if(this.verificarFichaValida(f)){
-//                        this.colocarFicha(f);
-//                    }
-//                }
-//                scheduler.shutdown(); // detener
-//            }
-//
-//        }, 0, 1, TimeUnit.SECONDS);
-//        this.pasar();
-//    }
-
     @Override
     public void agregarObservador(Observador observador) {
         this.getObservers().add(observador);

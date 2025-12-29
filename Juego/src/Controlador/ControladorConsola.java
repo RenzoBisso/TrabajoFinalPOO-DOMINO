@@ -11,7 +11,6 @@ public class ControladorConsola implements Observador {
 
     private Ronda modelo;
     private ArrayList<Vista> vistas;
-    private int turno = 0;
 
     public ControladorConsola(Ronda modelo, ArrayList<Vista> vistas) {
         this.modelo = modelo;
@@ -19,10 +18,12 @@ public class ControladorConsola implements Observador {
         this.modelo.agregarObservador(this);
     }
 
+
+
     public void jugada() {
         while (true) {
-
-            Vista vistaActual = vistas.get(turno);
+            Vista vistaActual = vistas.get(modelo.getTurno());
+            vistaActual.mostrarPtos(modelo.getTablero().getJugadores());
             vistaActual.mostrarMensaje("================================");
             vistaActual.mostrarMensaje("Turno de:");
             vistaActual.mostrarJugador(modelo.getJugadorActual());
@@ -34,13 +35,17 @@ public class ControladorConsola implements Observador {
             switch (opcion) {
                 case 1:
                     vistaActual.mostrarFichasPozo(modelo.getTablero().getPozo().getFichas());
-                    vistaActual.mostrarMensaje("Tomando Ficha");
-                    String indice = vistaActual.solicitarDato("Indice de la ficha");
-                    boolean ok = modelo.pedirFicha(Integer.parseInt(indice));
-                    if (!ok) {
-                        vistaActual.mostrarMensaje("La ficha no sirve. Intente con otra.");
-                    } else {
-                        vistaActual.mostrarMensaje("Tomaste la ficha correctamente.");
+                    if(modelo.getTablero().getPozo().getFichas().isEmpty()){
+                        modelo.pasar();
+                    }else{
+                        vistaActual.mostrarMensaje("Tomando Ficha");
+                        String indice = vistaActual.solicitarDato("Indice de la ficha");
+                        boolean ok = modelo.pedirFicha(Integer.parseInt(indice));
+                        if (!ok) {
+                            vistaActual.mostrarMensaje("No se pudo tomar ficha.");
+                        } else {
+                            vistaActual.mostrarMensaje("Tomaste la ficha correctamente.");
+                        }
                     }
                     break;
                 case 2:
@@ -57,25 +62,22 @@ public class ControladorConsola implements Observador {
                         vistaActual.mostrarMensaje("Se coloco la ficha");
                         modelo.colocarFicha(f, Boolean.parseBoolean(s));
                         vistaActual.mostrarPtos(modelo.getTablero().getJugadores());
-                        avanzarTurno();
                     } else {
                         vistaActual.mostrarMensaje("No se puede colocar la ficha");
                     }
                     break;
                 case 3:
                     vistaActual.mostrarMensaje("Saliendo de la partida");
+                    break;
+                case 4:
+
                 default:
                     vistaActual.mostrarMensaje("Opcion invalida");
             }
         }
     }
 
-    private void avanzarTurno() {
-        turno++;
-        if (turno >= vistas.size()) {
-            turno = 0;
-        }
-    }
+
 
     @Override
     public void actualizar() {
